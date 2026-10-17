@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonMandarin Maestro — Compendio Interactivo Chino Mandarín</title>
+    <style>
+        :root {
+            --active-color: #ff2a5f;
+            --bg-dark: #090b10;
+            --card-bg: rgba(22, 26, 42, 0.72);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 12%, color-mix(in srgb, var(--active-color) 35%, transparent) 0%, transparent 60%),
+                radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.08) 0%, transparent 45%);
+            transition: background 0.5s ease;
+        }
+
+        #particle-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* HEADER & TOP CONTROLS */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(9, 11, 16, 0.85);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.2rem;
+        }
+
+        .top-bar {
+            max-width: 1350px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 12px var(--active-color));
+        }
+
+        .brand h1 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand span {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            display: block;
+        }
+
+        .controls-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            padding: 0.55rem 1rem 0.55rem 2.3rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            width: 240px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--active-color);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--active-color) 50%, transparent);
+            width: 280px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .mode-switch {
+            display: flex;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 0.25rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: #d1d5db;
+            padding: 0.45rem 1.1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .mode-btn.active {
+            background: var(--active-color);
+            color: #fff;
+            box-shadow: 0 0 16px var(--active-color);
+        }
+
+        /* CATEGORY NAVBAR */
+        .category-navbar {
+            max-width: 1350px;
+            margin: 0.75rem auto 0;
+            display: flex;
+            gap: 0.55rem;
+            overflow-x: auto;
+            padding-bottom: 0.4rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--active-color) rgba(255,255,255,0.05);
+        }
+
+        .category-navbar::-webkit-scrollbar {
+            height: 6px;
+        }
+        .category-navbar::-webkit-scrollbar-thumb {
+            background: var(--active-color);
+            border-radius: 10px;
+        }
+
+        .cat-pill {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #e5e7eb;
+            padding: 0.45rem 0.95rem;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cat-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-2px);
+        }
+
+        .cat-pill.active {
+            background: color-mix(in srgb, var(--active-color) 28%, rgba(20,20,35,0.9));
+            border-color: var(--active-color);
+            color: #fff;
+            box-shadow: 0 0 18px color-mix(in srgb, var(--active-color) 55%, transparent);
+        }
+
+        .cat-count {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 0.1rem 0.45rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem 4rem;
+        }
+
+        /* STAGE SHOWCASE */
+        .stage {
+            background: rgba(18, 22, 36, 0.78);
+            backdrop-filter: blur(22px);
+            border: 2px solid color-mix(in srgb, var(--active-color) 55%, rgba(255,255,255,0.12));
+            border-radius: 28px;
+            padding: 1.8rem;
+            max-width: 820px;
+            margin: 0 auto 2rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.55), 0 0 45px -12px var(--active-color);
+            position: relative;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            background: rgba(255,255,255,0.1);
+            padding: 0.25rem 0.9rem;
+            border-radius: 20px;
+            margin-bottom: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .stage-main-flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.8rem;
+            flex-wrap: wrap;
+            margin: 0.4rem 0 1rem;
+        }
+
+        .stage-emoji {
+            font-size: 5rem;
+            filter: drop-shadow(0 0 25px var(--active-color));
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .stage-emoji:hover {
+            transform: scale(1.18) rotate(8deg);
+        }
+
+        .stage-hanzi {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 30px var(--active-color);
+            cursor: pointer;
+            line-height: 1.1;
+            transition: transform 0.2s;
+        }
+
+        .stage-hanzi:hover {
+            transform: scale(1.06);
+        }
+
+        .stage-pinyin {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #111;
+            background: #fff;
+            padding: 0.25rem 1.2rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+            box-shadow: 0 0 20px var(--active-color);
+        }
+
+        .stage-es {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.4rem;
+        }
+
+        .stage-note {
+            font-size: 0.92rem;
+            color: #fde047;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 0.55rem 1rem;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 0.4rem;
+            border-left: 3px solid var(--active-color);
+        }
+
+        /* CHARACTER BREAKDOWN CHIPS */
+        .char-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .char-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.85rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .char-chip:hover {
+            background: var(--active-color);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .audio-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #fff;
+            padding: 0.55rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--active-color);
+            border-color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px var(--active-color);
+        }
+
+        /* SECTION BANNER */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0 0.4rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* VOCABULARY GRID */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 1rem;
+        }
+
+        .vocab-card {
+            background: var(--card-bg);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.1rem 0.85rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .vocab-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--card-color);
+            opacity: 0.85;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-7px) scale(1.03);
+            border-color: var(--card-color);
+            box-shadow: 0 12px 28px -6px var(--card-color);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.4rem;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease;
+        }
+
+        .vocab-card:hover .card-icon {
+            transform: scale(1.18) rotate(-6deg);
+        }
+
+        .card-hanzi {
+            font-size: 1.65rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+
+        .card-pinyin {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--card-color);
+            margin-bottom: 0.3rem;
+        }
+
+        .card-es {
+            font-size: 0.82rem;
+            color: #d1d5db;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        /* QUIZ MODE */
+        #quiz-section {
+            display: none;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.07);
+            padding: 0.9rem 1.4rem;
+            border-radius: 18px;
+            margin-bottom: 1.2rem;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        .quiz-btn {
+            background: rgba(30, 35, 58, 0.85);
+            border: 2px solid rgba(255,255,255,0.18);
+            border-radius: 18px;
+            padding: 1.1rem;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            border-color: var(--active-color);
+            background: rgba(255,255,255,0.12);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 640px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+            .stage-hanzi {
+                font-size: 3.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <header>
+        <div class="top-bar">
+            <div class="brand">
+                <div class="brand-logo">🐉</div>
+                <div>
+                    <h1>NEON MANDARIN MAESTRO</h1>
+                    <span id="total-counter">Cargando vocabulario...</span>
+                </div>
+            </div>
+
+            <div class="controls-wrap">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Buscar español, pinyin o hànzì..." oninput="handleSearch(this.value)">
+                </div>
+
+                <div class="mode-switch">
+                    <button class="mode-btn active" id="btn-explore" onclick="setMode('explore')">🧪 Laboratorio</button>
+                    <button class="mode-btn" id="btn-quiz" onclick="setMode('quiz')">🎮 Arcade Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="category-navbar" id="category-navbar"></nav>
+    </header>
+
+    <main class="container">
+        <!-- MODO LABORATORIO -->
+        <section id="explore-section">
+            <div class="stage" id="main-stage">
+                <div class="stage-badge" id="stage-cat">Categoría</div>
+                <div class="stage-main-flex">
+                    <div class="stage-emoji" id="stage-emoji" onclick="replayCurrent(event)">👋</div>
+                    <div>
+                        <div class="stage-hanzi" id="stage-hanzi" onclick="replayCurrent(event)">你好</div>
+                    </div>
+                </div>
+                <div class="stage-pinyin" id="stage-pinyin">nǐ hǎo</div>
+                <div class="stage-es" id="stage-es">Hola</div>
+                <div id="stage-note-wrap">
+                    <div class="stage-note" id="stage-note">💡 Haz clic en cualquier carácter individual abajo para escucharlo por separado.</div>
+                </div>
+
+                <div class="char-breakdown" id="char-breakdown"></div>
+
+                <div class="audio-actions">
+                    <button class="action-btn" onclick="speakWord(currentItem.hanzi, 0.9)">🔊 Pronunciación Normal</button>
+                    <button class="action-btn" onclick="speakWord(currentItem.hanzi, 0.55)">🐢 Modo Tortuga (Lento)</button>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title" id="grid-title">✨ Vocabulario</div>
+            </div>
+
+            <div class="vocab-grid" id="vocab-grid"></div>
+        </section>
+
+        <!-- MODO QUIZ ARCADE -->
+        <section id="quiz-section">
+            <div class="score-bar">
+                <span>🏆 Puntos: <span id="quiz-score">0</span></span>
+                <span>🔥 Racha: <span id="quiz-streak">0</span></span>
+            </div>
+            <div class="stage" id="quiz-stage">
+                <div class="stage-badge" id="quiz-cat-badge">Desafío</div>
+                <div class="stage-hanzi" id="quiz-hanzi" style="margin: 0.6rem 0;">你好</div>
+                <div class="stage-pinyin" id="quiz-pinyin">nǐ hǎo</div>
+                <div class="audio-actions">
+                    <button class="action-btn" onclick="speakWord(quizTarget.hanzi, 0.85)">🔊 Escuchar Pista</button>
+                </div>
+                <div class="quiz-options" id="quiz-options"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // CONFIGURACIÓN DE CATEGORÍAS DEL NAVBAR
+        const categories = [
+            { id: 'all', name: 'Todas', icon: '🌟', color: '#ff2a5f' },
+            { id: 'saludos', name: 'Saludos y Cortesía', icon: '👋', color: '#f43f5e' },
+            { id: 'pronombres', name: 'Pronombres y Preguntas', icon: '🫵', color: '#ec4899' },
+            { id: 'familia', name: 'Familia y Personas', icon: '👨‍👩‍👧‍👦', color: '#a855f7' },
+            { id: 'profesiones', name: 'Profesiones y Lugares', icon: '🏥', color: '#8b5cf6' },
+            { id: 'verbos', name: 'Verbos y Rutina', icon: '⚡', color: '#6366f1' },
+            { id: 'tiempo', name: 'Estaciones y Calendario', icon: '🗓️', color: '#0ea5e9' },
+            { id: 'numeros', name: 'Números y Matemáticas', icon: '🔢', color: '#06b6d4' },
+            { id: 'paises', name: 'Países, Idiomas y Deporte', icon: '🌍', color: '#14b8a6' },
+            { id: 'clasificadores', name: 'Clasificadores (量词)', icon: '📦', color: '#10b981' },
+            { id: 'adjetivos', name: 'Adjetivos y Emociones', icon: '✨', color: '#84cc16' },
+            { id: 'colores', name: 'Colores (色彩)', icon: '🎨', color: '#eab308' },
+            { id: 'animales', name: 'Zodiaco y Animales', icon: '🐉', color: '#f59e0b' },
+            { id: 'comidas', name: 'Platos y Comidas', icon: '🍜', color: '#f97316' },
+            { id: 'bebidas', name: 'Bebidas (饮料)', icon: '🧋', color: '#ef4444' },
+            { id: 'verduras', name: 'Verduras (蔬菜)', icon: '🥦', color: '#22c55e' },
+            { id: 'frutas', name: 'Frutas (水果)', icon: '🍉', color: '#fb7185' },
+            { id: 'objetos', name: 'Utensilios y Objetos', icon: '🥢', color: '#38bdf8' }
+        ];
+
+        // BASE DE DATOS COMPLETA — CADA PALABRA SEPARADA INDIVIDUALMENTE CON SU ILUSTRACIÓN
+        const rawVocab = [
+            // 1A. SALUDOS Y CORTESÍA
+            ['saludos', '你好', 'nǐ hǎo', 'Hola', '👋', 'Saludo estándar en cualquier momento del día.'],
+            ['saludos', '你好吗？', 'nǐ hǎo ma?', '¿Cómo estás?', '😊', 'Añade la partícula 吗 (ma) para convertir el saludo en pregunta.'],
+            ['saludos', '早上好', 'zǎoshang hǎo', 'Buenos días', '🌅', 'Saludo matutino formal.'],
+            ['saludos', '下午好', 'xiàwǔ hǎo', 'Buenas tardes', '🌇', 'Se usa después del mediodía.'],
+            ['saludos', '晚上好', 'wǎnshang hǎo', 'Buenas noches', '🌙', 'Saludo al caer la noche.'],
+            ['saludos', '再见', 'zàijiàn', 'Adiós / Hasta luego', '👋', 'Literalmente: "Nos vemos de nuevo".'],
+            ['saludos', '谢谢', 'xièxie', 'Gracias', '🙏', 'Expresión básica de agradecimiento.'],
+            ['saludos', '不客气', 'búkèqi', 'De nada', '🤗', 'Literalmente: "No seas cortés / formal".'],
+            ['saludos', '对不起', 'duìbuqǐ', 'Perdón / Disculpas', '🙇', 'Para pedir disculpas sinceramente.'],
+            ['saludos', '请', 'qǐng', 'Por favor / Invitar', '🤲', 'Se coloca al inicio de la frase para cortesía.'],
+            ['saludos', '请进', 'qǐng jìn', 'Pase, por favor', '🚪', 'Usado al invitar a alguien a entrar a un lugar.'],
+            ['saludos', '请问', 'qǐngwèn', 'Disculpe, una pregunta...', '🙋', 'Literalmente: "Por favor, pregunto...".'],
+            ['saludos', '贵', 'guì', 'Costoso / Noble', '💎', 'Se usa tanto para precios altos como en expresiones honoríficas.'],
+            ['saludos', '您贵姓？', 'nín guìxìng?', '¿Su honorable apellido?', '🪪', 'Forma muy respetuosa de preguntar el apellido.'],
+            ['saludos', '先生', 'xiānsheng', 'Señor / Don / Esposo', '🤵', 'Título de respeto equivalente a "Señor".'],
+            ['saludos', '马上就来', 'mǎshàng jiù lái', '¡Ya mismo viene! / ¡Enseguida voy!', '🏃', 'Literalmente: "Sobre el caballo ya viene".'],
+
+            // 1B. PRONOMBRES, DEMOSTRATIVOS E INTERROGATIVOS
+            ['pronombres', '我', 'wǒ', 'Yo', '🙋‍♂️', 'Pronombre de primera persona singular.'],
+            ['pronombres', '你', 'nǐ', 'Tú', '👉', 'Pronombre de segunda persona singular.'],
+            ['pronombres', '他', 'tā', 'Él', '👨', 'Usa el radical de persona (亻) a la izquierda.'],
+            ['pronombres', '她', 'tā', 'Ella', '👩', 'Suena igual que 他 (tā), pero lleva el radical de mujer (女).'],
+            ['pronombres', '您', 'nín', 'Usted (formal singular)', '🙇‍♂️', 'Añade un corazón (心) debajo de 你 para mostrar respeto.'],
+            ['pronombres', '我们', 'wǒmen', 'Nosotros / Nosotras', '👥', 'El sufijo 们 (men) pluraliza los pronombres personales.'],
+            ['pronombres', '你们', 'nǐmen', 'Ustedes / Vosotros', '🫵', 'Plural de segunda persona.'],
+            ['pronombres', '他们', 'tāmen', 'Ellos / Ellas', '👨‍👩‍👧‍👦', 'Plural de tercera persona.'],
+            ['pronombres', '这', 'zhè', 'Este / Esta / Esto', '👇', 'Demostrativo de cercanía.'],
+            ['pronombres', '那', 'nà', 'Aquel / Ese / Eso', '👉', 'Demostrativo de lejanía.'],
+            ['pronombres', '这些', 'zhèxiē', 'Estos / Estas', '🤲', 'Añade 些 (xiē) para el plural de cercanía.'],
+            ['pronombres', '那些', 'nàxiē', 'Esos / Aquellos', '👐', 'Añade 些 (xiē) para el plural de lejanía.'],
+            ['pronombres', '一点儿', 'yìdiǎnr', 'Un poco (一点 yìdiǎn)', '🤏', 'Indica una pequeña cantidad.'],
+            ['pronombres', '一些', 'yìxiē', 'Unos / Algunos', '🔢', 'Indica una cantidad indefinida plural.'],
+            ['pronombres', '什么', 'shénme', '¿Qué?', '❓', 'Interrogativo fundamental para objetos o acciones.'],
+            ['pronombres', '谁', 'shéi (shuí)', '¿Quién?', '🕵️', 'Se puede pronunciar tanto shéi como shuí.'],
+            ['pronombres', '用什么？', 'yòng shénme?', '¿Con qué? / ¿Usando qué?', '🛠️', 'Pregunta por la herramienta o utensilio empleado.'],
+            ['pronombres', '哪', 'nǎ', '¿Cuál?', '🤔', 'Interrogativo para elegir entre opciones.'],
+            ['pronombres', '哪里', 'nǎlǐ (nǎr 哪儿)', '¿Dónde?', '📍', 'En el norte de China suele decirse 哪儿 (nǎr).'],
+            ['pronombres', '这是哪儿？', 'zhè shì nǎr?', '¿Dónde es esto?', '🗺️', 'Útil para orientarse en un lugar nuevo.'],
+            ['pronombres', '在哪儿？', 'zài nǎr?', '¿Dónde está...?', '🧭', 'Se coloca después del sujeto (ej. 医院在哪儿？).'],
+            ['pronombres', '怎么', 'zěnme', '¿Cómo?', '🧐', 'Pregunta por el modo o manera de hacer algo.'],
+            ['pronombres', '还是', 'háishi', 'O (alternativa en preguntas)', '⚖️', 'Se usa exclusivamente en preguntas de elección (¿A o B?).'],
+            ['pronombres', '几', 'jǐ', '¿Cuántos? (menos de 10)', '🖐️', 'Se usa para cantidades estimadas menores a 10 y con clasificador.'],
+            ['pronombres', '多少', 'duōshao', '¿Cuántos? / ¿Cuánto? (>10)', '💯', 'Literalmente: "Mucho-poco". Usado para cantidades grandes o precios.'],
+            ['pronombres', '吗', 'ma', 'Partícula de pregunta Sí/No', '❔', 'Colócala al final de cualquier oración afirmativa para hacerla pregunta.'],
+            ['pronombres', '呢', 'ne', '¿Y tú? / ¿Y...? (partícula)', '🔄', 'Se usa para devolver una pregunta (ej. 我很好，你呢？).'],
+            ['pronombres', '问题', 'wèntí', 'Pregunta / Problema', '💡', 'Puede significar tanto una duda como un inconveniente.'],
+
+            // 2A. FAMILIA Y PERSONAS
+            ['familia', '家人', 'jiārén', 'Familia (miembros)', '👨‍👩‍👧‍👦', 'Literalmente: "Personas de la casa".'],
+            ['familia', '家', 'jiā', 'Casa / Hogar / Familia', '🏠', 'Un techo (宀) con un cerdo (豕) debajo: símbolo tradicional de hogar.'],
+            ['familia', '爸爸', 'bàba', 'Papá', '👨‍💼', 'El segundo carácter se pronuncia en tono neutro.'],
+            ['familia', '妈妈', 'māma', 'Mamá', '👩‍💼', 'Combina el radical de mujer (女) con el fonético de caballo (马).'],
+            ['familia', '爷爷', 'yéye', 'Abuelo paterno', '👴', 'En chino se distingue entre la rama paterna y la materna.'],
+            ['familia', '奶奶', 'nǎinai', 'Abuela paterna', '👵', 'Madre del papá.'],
+            ['familia', '姥爷', 'lǎoye', 'Abuelo materno', '🧓', 'Padre de la mamá.'],
+            ['familia', '姥姥', 'lǎolao (外婆 wàipó)', 'Abuela materna', '👵', 'En el norte se dice 姥姥 y en el sur 外婆.'],
+            ['familia', '哥哥', 'gēge', 'Hermano mayor', '👦', 'Hermano varón de mayor edad.'],
+            ['familia', '弟弟', 'dìdi', 'Hermano menor', '👶', 'Hermano varón de menor edad.'],
+            ['familia', '姐姐', 'jiějie', 'Hermana mayor', '👧', 'Hermana mujer de mayor edad.'],
+            ['familia', '妹妹', 'mèimei', 'Hermana menor', '🧒', 'Hermana mujer de menor edad.'],
+            ['familia', '儿子', 'érzi', 'Hijo (varón)', '👦', 'Hijo masculino.'],
+            ['familia', '女儿', 'nǚ\'ér', 'Hija (mujer)', '👧', 'Literalmente: "Niña-hija".'],
+            ['familia', '独生子女', 'dúshēngzǐnǚ', 'Hijo/a único/a', '🌟', 'Expresión para quien no tiene hermanos.'],
+            ['familia', '朋友', 'péngyou', 'Amigo / Amiga', '🤝', 'Dos lunas juntas simbolizando compañía leal.'],
+            ['familia', '同学', 'tóngxué', 'Compañero de clase', '🎓', 'Literalmente: "Estudiar juntos".'],
+            ['familia', '男朋友', 'nánpéngyou', 'Novio', '💑', 'Literalmente: "Amigo varón".'],
+            ['familia', '女朋友', 'nǚpéngyou', 'Novia', '👩‍❤️‍👨', 'Literalmente: "Amiga mujer".'],
+            ['familia', '人', 'rén', 'Persona / Ser humano', '🧍', 'Representa las dos piernas de una persona caminando.'],
+            ['familia', '每个人', 'měi gè rén', 'Cada persona / Todos', '🌐', 'Usa 每 (cada) + clasificador 个 + 人.'],
+            ['familia', '名字', 'míngzi', 'Nombre', '🏷️', 'Nombre de pila o completo.'],
+            ['familia', '姓', 'xìng', 'Apellido (o apellidarse)', '📜', 'En China el apellido siempre va antes del nombre.'],
+            ['familia', '岁', 'suì', 'Años de edad', '🎂', 'Clasificador exclusivo para decir la edad.'],
+
+            // 2B. PROFESIONES E INSTITUCIONES
+            ['profesiones', '老师', 'lǎoshī', 'Profesor / Maestro', '👨‍🏫', 'Término de gran respeto hacia quien enseña.'],
+            ['profesiones', '学生', 'xuésheng', 'Estudiante / Alumno', '🧑‍🎓', 'Literalmente: "Vida que aprende".'],
+            ['profesiones', '医生', 'yīshēng', 'Médico / Doctor', '🩺', 'Profesional de la medicina.'],
+            ['profesiones', '护士', 'hùshi', 'Enfermero / Enfermera', '👩‍⚕️', '護 (proteger/cuidar) + 士 (profesional).'],
+            ['profesiones', '记者', 'jìzhě', 'Periodista / Reportero', '🎤', 'Literalmente: "El que anota o registra".'],
+            ['profesiones', '医院', 'yīyuàn', 'Hospital', '🏥', 'Literalmente: "Patio o institución médica".'],
+            ['profesiones', '学院', 'xuéyuàn', 'Instituto / Facultad', '🏛️', 'Institución de educación superior.'],
+            ['profesiones', '语言学院', 'yǔyán xuéyuàn', 'Instituto de Idiomas', '🗣️', 'Facultad dedicada a la enseñanza de lenguas.'],
+            ['profesiones', '宿舍', 'sùshè', 'Habitación / Residencia estudiantil', '🛏️', 'Dormitorio universitario.'],
+            ['profesiones', '店', 'diàn', 'Tienda / Comercio', '🏪', 'Establecimiento comercial general.'],
+            ['profesiones', '书店', 'shūdiàn', 'Librería (tienda de libros)', '📚', 'Literalmente: "Libro (书) + Tienda (店)".'],
+            ['profesiones', '图书馆', 'túshūguǎn', 'Biblioteca', '📖', 'Edificio público o escolar para leer y prestar libros.'],
+            ['profesiones', '餐厅', 'cāntīng', 'Restaurante / Comedor', '🍽️', 'Salón de comidas o restaurante.'],
+            ['profesiones', '在', 'zài', 'Estar en / En (lugar)', '📌', 'Verbo de ubicación y preposición de lugar.'],
+
+            // 3. VERBOS: COMUNICACIÓN, ESTUDIO, RUTINA, DEPORTE Y MODALES
+            ['verbos', '说', 'shuō', 'Hablar / Decir', '💬', 'Lleva el radical de palabra/lenguaje a la izquierda.'],
+            ['verbos', '写', 'xiě', 'Escribir', '✍️', 'Verbo para trazar caracteres o textos.'],
+            ['verbos', '难写', 'nánxiě', 'Difícil de escribir', '😰', '难 (difícil) + 写 (escribir).'],
+            ['verbos', '问', 'wèn', 'Preguntar', '🙋‍♂️', 'Una boca (口) dentro de una puerta (门) pidiendo información.'],
+            ['verbos', '学', 'xué', 'Aprender', '🧠', 'Se usa para habilidades o materias generales.'],
+            ['verbos', '学习', 'xuéxí', 'Estudiar', '📝', 'Aprender (学) + Practicar (习).'],
+            ['verbos', '习', 'xí', 'Practicar / Ejercitar', '🎯', 'Originalmente representaba a un pájaro batiendo las alas para volar.'],
+            ['verbos', '看', 'kàn', 'Ver / Mirar / Leer', '👀', 'Una mano (手) sobre un ojo (目) mirando a lo lejos.'],
+            ['verbos', '看看', 'kànkan', 'Echar un vistazo', '🔍', 'Duplicar el verbo suaviza la acción.'],
+            ['verbos', '看书', 'kànshū', 'Leer libros', '📖', 'Literalmente: "Mirar libros".'],
+            ['verbos', '认识', 'rènshi', 'Conocer (personas o caracteres)', '🤝', 'Implica familiaridad o identificar a alguien.'],
+            ['verbos', '知道', 'zhīdào', 'Saber (datos / información)', '💡', 'Estar al tanto de un hecho o dato.'],
+            ['verbos', '叫', 'jiào', 'Llamarse / Llamar', '🗣️', 'Ej: 我叫... (Me llamo...).'],
+            ['verbos', '是', 'shì', 'Ser', '✔️', 'Une dos sustantivos (A es B). No se usa con adjetivos solos.'],
+            ['verbos', '进', 'jìn', 'Entrar / Avanzar', '🚪', 'Acción de pasar hacia adentro.'],
+            ['verbos', '进来', 'jìnlái', 'Entrar acá (hacia quien habla)', '🚶‍♂️', 'Combina 进 (entrar) + 来 (venir).'],
+            ['verbos', '开车', 'kāichē', 'Conducir auto / Manejar', '🚗', 'Literalmente: "encender/operar vehículo".'],
+            ['verbos', '迟到', 'chídào', 'Llegar tarde', '⏰', '迟 (tarde) + 到 (llegar).'],
+            ['verbos', '用', 'yòng', 'Usar / Utilizar', '🧰', 'Emplear un objeto, idioma o herramienta.'],
+            ['verbos', '做', 'zuò', 'Hacer / Elaborar / Preparar', '👐', 'Verbo de creación o actividad manual.'],
+            ['verbos', '做饭', 'zuòfàn', 'Cocinar / Preparar la comida', '🍳', 'Literalmente: "Hacer arroz/comida".'],
+            ['verbos', '难做', 'nánzuò', 'Difícil de hacer / preparar', '🧩', '难 (difícil) + 做 (hacer).'],
+            ['verbos', '做早饭', 'zuò zǎofàn', 'Hacer el desayuno', '🥞', 'Preparar la primera comida del día.'],
+            ['verbos', '做午饭', 'zuò wǔfàn', 'Hacer el almuerzo', '🍲', 'Preparar la comida del mediodía.'],
+            ['verbos', '做晚饭', 'zuò wǎnfàn', 'Hacer la cena', '🍛', 'Preparar la comida de la noche.'],
+            ['verbos', '踢', 'tī', 'Patear / Jugar con los pies', '🦵', 'Se usa para deportes de pie como el fútbol.'],
+            ['verbos', '踢足球', 'tī zúqiú', 'Jugar fútbol', '⚽', 'Literalmente: "Patear balón de pie".'],
+            ['verbos', '打', 'dǎ', 'Golpear / Jugar (deportes de mano)', '✋', 'Usado en básquetbol, tenis, vóley, etc.'],
+            ['verbos', '打篮球', 'dǎ lánqiú', 'Jugar básquetbol', '🏀', 'Literalmente: "Golpear/botar balón de canasta".'],
+            ['verbos', '玩', 'wán', 'Jugar / Divertirse', '🎉', 'Pasar el rato o jugar recreativamente.'],
+            ['verbos', '玩游戏', 'wán yóuxì', 'Jugar videojuegos / juegos', '🎮', 'Verbo 玩 + sustantivo 游戏.'],
+            ['verbos', '游戏', 'yóuxì', 'Juego / Videojuego', '🕹️', 'Sustantivo para juegos recreativos o electrónicos.'],
+            ['verbos', '买', 'mǎi', 'Comprar (tono 3)', '🛒', '¡Atención al tono 3 descendente-ascendente!'],
+            ['verbos', '卖', 'mài', 'Vender (tono 4)', '🏷️', 'Lleva una cruz (+) arriba de 买 y se pronuncia en tono 4.'],
+            ['verbos', '买卖', 'mǎimai', 'Negocio / Comercio', '🤝', 'Literalmente: "Comprar y vender".'],
+            ['verbos', '有', 'yǒu', 'Tener / Haber', '🤲', 'Verbo de posesión y existencia.'],
+            ['verbos', '没有', 'méiyǒu', 'No tener / No haber', '🚫', 'El verbo 有 SIEMPRE se niega con 没 (méi), nunca con 不.'],
+            ['verbos', '去', 'qù', 'Ir', '🚶', 'Desplazarse hacia un destino.'],
+            ['verbos', '吃', 'chī', 'Comer', '🍽️', 'Lleva el radical de boca (口) a la izquierda.'],
+            ['verbos', '喝', 'hē', 'Beber / Tomar', '🥤', 'También lleva el radical de boca (口).'],
+            ['verbos', '可以', 'kěyǐ', 'Poder (permiso o posibilidad)', '✅', 'Se usa para pedir permiso o indicar que algo es posible.'],
+            ['verbos', '会', 'huì', 'Saber hacer (habilidad aprendida)', '🎓', 'Ej: 我会说汉语 (Sé hablar chino porque lo aprendí).'],
+            ['verbos', '都会', 'dōu huì', 'Saber hacer ambos / todos', '🌟', '都 (todos/ambos) + 会 (saber hacer).'],
+            ['verbos', '想', 'xiǎng', 'Tener ganas de / Pensar / Extrañar', '💭', 'Expresa un deseo suave o pensamiento.'],
+            ['verbos', '想要', 'xiǎng yào', 'Quisiera / Desearía tener', '🌠', 'Forma cortés de expresar que quieres algo.'],
+            ['verbos', '要', 'yào', 'Querer (firme) / Ir a', '🎯', 'Más directo que 想; útil al pedir en restaurantes.'],
+            ['verbos', '喜欢', 'xǐhuan', 'Gustar', '❤️', 'Expresa agrado o afición por algo o alguien.'],
+            ['verbos', '爱', 'ài', 'Amar / Encantar', '💖', 'Sentimiento profundo de amor o pasión.'],
+            ['verbos', '祝', 'zhù', 'Desear (felicitaciones / buenos deseos)', '🥂', 'Ej: 祝你生日快乐 (Te deseo feliz cumpleaños).'],
+
+            // 4A. ESTACIONES, TIEMPO Y CALENDARIO
+            ['tiempo', '季节', 'jìjié', 'Estación del año', '🗓️', 'Término general para las cuatro estaciones.'],
+            ['tiempo', '春天', 'chūntiān', 'Primavera', '🌸', 'Estación del florecimiento.'],
+            ['tiempo', '夏天', 'xiàtiān', 'Verano', '☀️', 'Estación cálida del año.'],
+            ['tiempo', '秋天', 'qiūtiān', 'Otoño', '🍂', 'Estación de la cosecha.'],
+            ['tiempo', '冬天', 'dōngtiān', 'Invierno', '❄️', 'Estación fría del año.'],
+            ['tiempo', '天', 'tiān', 'Día / Cielo / Clima', '🌤️', 'Carácter fundamental presente en los días y estaciones.'],
+            ['tiempo', '前天', 'qiántiān', 'Anteayer', '⏪', 'Literalmente: "Día de adelante/antes".'],
+            ['tiempo', '昨天', 'zuótiān', 'Ayer', '⬅️', 'El día anterior a hoy.'],
+            ['tiempo', '今天', 'jīntiān', 'Hoy', '📍', 'El día presente.'],
+            ['tiempo', '明天', 'míngtiān', 'Mañana', '➡️', 'Sol (日) + Luna (月) = brillante próximo día.'],
+            ['tiempo', '后天', 'hòutiān', 'Pasado mañana', '⏩', 'Literalmente: "Día posterior".'],
+            ['tiempo', '生日', 'shēngrì', 'Cumpleaños', '🎉', 'Literalmente: "Día (日) de nacimiento (生)".'],
+            ['tiempo', '生日蛋糕', 'shēngrì dàngāo', 'Pastel de cumpleaños', '🎂', '生日 (cumpleaños) + 蛋糕 (pastel).'],
+            ['tiempo', '年', 'nián', 'Año', '📅', 'Unidad anual del calendario.'],
+            ['tiempo', '月', 'yuè', 'Mes / Luna', '🌙', 'Los meses en chino se forman con Número + 月.'],
+            ['tiempo', '周', 'zhōu', 'Semana', '🗓️', 'Forma breve de referirse a la semana.'],
+            ['tiempo', '日', 'rì (号 hào)', 'Día del mes / Sol', '📆', '日 es formal/escrito y 号 (hào) es hablado para fechas.'],
+            ['tiempo', '星期一', 'xīngqīyī', 'Lunes (礼拜一 lǐbàiyī / 周一 zhōuyī)', '1️⃣', 'Semana + Día 1.'],
+            ['tiempo', '星期二', 'xīngqī\'èr', 'Martes (礼拜二 lǐbài\'èr / 周二 zhōu\'èr)', '2️⃣', 'Semana + Día 2.'],
+            ['tiempo', '星期三', 'xīngqīsān', 'Miércoles (礼拜三 lǐbàisān / 周三 zhōusān)', '3️⃣', 'Semana + Día 3.'],
+            ['tiempo', '星期四', 'xīngqīsì', 'Jueves (礼拜四 lǐbàisì / 周四 zhōusì)', '4️⃣', 'Semana + Día 4.'],
+            ['tiempo', '星期五', 'xīngqīwǔ', 'Viernes (礼拜五 lǐbàiwǔ / 周五 zhōuwǔ)', '5️⃣', 'Semana + Día 5.'],
+            ['tiempo', '星期六', 'xīngqīliù', 'Sábado (礼拜六 lǐbàiliù / 周六 zhōuliù)', '6️⃣', 'Semana + Día 6.'],
+            ['tiempo', '星期天', 'xīngqītiān (星期日 xīngqīrì)', 'Domingo (礼拜天 / 周日)', '🌞', 'El domingo nunca usa el número 7; usa 天 (cielo) o 日 (sol).'],
+
+            // 4B. NÚMEROS Y OPERACIONES MATEMÁTICAS
+            ['numeros', '零', 'líng', 'Cero (0)', '0️⃣', 'Usado en dígitos, años y números telefónicos.'],
+            ['numeros', '一', 'yī', 'Uno (1)', '1️⃣', 'Un solo trazo horizontal.'],
+            ['numeros', '二', 'èr', 'Dos (2 - conteo y matemáticas)', '2️⃣', 'Se usa en matemáticas, ordinales y dígitos de años.'],
+            ['numeros', '两', 'liǎng', 'Dos (2 - con clasificador)', '✌️', 'Regla: Usa 两 al contar cosas con clasificador (ej. 两杯咖啡).'],
+            ['numeros', '三', 'sān', 'Tres (3)', '3️⃣', 'Tres trazos horizontales.'],
+            ['numeros', '四', 'sì', 'Cuatro (4)', '4️⃣', 'Número 4.'],
+            ['numeros', '五', 'wǔ', 'Cinco (5)', '5️⃣', 'Número 5.'],
+            ['numeros', '六', 'liù', 'Seis (6)', '6️⃣', 'Asociado con que todo fluya bien (六六大顺).'],
+            ['numeros', '七', 'qī', 'Siete (7)', '7️⃣', 'Número 7.'],
+            ['numeros', '八', 'bā', 'Ocho (8)', '8️⃣', 'Símbolo de prosperidad y fortuna en China.'],
+            ['numeros', '九', 'jiǔ', 'Nueve (9)', '9️⃣', 'Simboliza longevidad y eternidad.'],
+            ['numeros', '十', 'shí', 'Diez (10)', '🔟', 'Base para formar las decenas.'],
+            ['numeros', '十一', 'shíyī', 'Once (11)', '🔢', 'Literalmente: "Diez + Uno".'],
+            ['numeros', '十二', 'shí\'èr', 'Doce (12)', '🔢', 'Literalmente: "Diez + Dos".'],
+            ['numeros', '二十', 'èrshí', 'Veinte (20)', '🔢', 'Literalmente: "Dos dieces".'],
+            ['numeros', '三十', 'sānshí', 'Treinta (30)', '🔢', 'Literalmente: "Tres dieces".'],
+            ['numeros', '一百', 'yìbǎi', 'Cien (100)', '💯', 'Una centena.'],
+            ['numeros', '一千', 'yìqiān', 'Mil (1,000)', '🔢', 'Un millar.'],
+            ['numeros', '一万', 'yíwàn', 'Diez mil (10,000)', '🪙', 'En chino las grandes cifras se agrupan de 10,000 en 10,000 (万).'],
+            ['numeros', '百万', 'bǎiwàn', 'Un millón (1,000,000)', '💰', 'Literalmente: "Cien (百) veces diez mil (万)".'],
+            ['numeros', '加', 'jiā', 'Más / Sumar (+)', '➕', 'Operación de adición.'],
+            ['numeros', '减', 'jiǎn', 'Menos / Restar (-)', '➖', 'Operación de sustracción.'],
+            ['numeros', '乘', 'chéng', 'Multiplicar por (×)', '✖️', 'Operación de multiplicación.'],
+            ['numeros', '除', 'chú', 'Dividir entre (÷)', '➗', 'Operación de división.'],
+            ['numeros', '等于', 'děngyú', 'Es igual a (=)', '🟰', 'Resultado de una operación matemática.'],
+
+            // 5. PAÍSES, IDIOMAS Y DEPORTES
+            ['paises', '国家', 'guójiā', 'País / Nación', '🌍', 'Literalmente: "Nación (国) + Familia (家)".'],
+            ['paises', '中国', 'Zhōngguó', 'China', '🇨🇳', 'Literalmente: "El País del Centro".'],
+            ['paises', '汉语', 'Hànyǔ', 'Idioma chino (hablado)', '🗣️', 'Lengua de la etnia Han.'],
+            ['paises', '中文', 'Zhōngwén', 'Idioma chino (escrito/general)', '🀄', 'Cultura y lengua escrita china.'],
+            ['paises', '加拿大', 'Jiānádà', 'Canadá', '🇨🇦', 'Adaptación fonética de Canadá.'],
+            ['paises', '英语', 'Yīngyǔ', 'Idioma inglés', '🇬🇧', 'Raíz del país (英) + 语 (idioma).'],
+            ['paises', '法语', 'Fǎyǔ', 'Idioma francés', '🇫🇷', 'Hablado en Francia y Canadá.'],
+            ['paises', '美国', 'Měiguó', 'Estados Unidos', '🇺🇸', 'Literalmente: "País Hermoso".'],
+            ['paises', '英国', 'Yīngguó', 'Reino Unido / Inglaterra', '🇬🇧', 'País de origen del idioma inglés.'],
+            ['paises', '韩国', 'Hánguó', 'Corea del Sur', '🇰🇷', 'República de Corea.'],
+            ['paises', '韩语', 'Hányǔ', 'Idioma coreano', '🇰🇷', '韩 (Corea) + 语 (idioma).'],
+            ['paises', '西班牙', 'Xībānyá', 'España', '🇪🇸', 'Adaptación fonética al mandarín.'],
+            ['paises', '哥伦比亚', 'Gēlúnbǐyà', 'Colombia', '🇨🇴', 'Adaptación fonética de Colombia.'],
+            ['paises', '西班牙语', 'Xībānyáyǔ (西语 Xīyǔ)', 'Idioma español', '🗣️', 'En conversación suele abreviarse como 西语 (Xīyǔ).'],
+            ['paises', '葡萄牙', 'Pútáoyá', 'Portugal', '🇵🇹', 'Curiosamente incluye los caracteres de "uva" (葡萄) y "diente" (牙).'],
+            ['paises', '葡萄牙语', 'Pútáoyáyǔ', 'Idioma portugués', '🇵🇹', '葡萄牙 (Portugal) + 语 (idioma).'],
+            ['paises', '德国', 'Déguó', 'Alemania', '🇩🇪', 'Dé (virtud/fonético de Deutsch) + guó (país).'],
+            ['paises', '德语', 'Déyǔ', 'Idioma alemán', '🇩🇪', '德 (Alemania) + 语 (idioma).'],
+            ['paises', '意大利', 'Yìdàlì', 'Italia', '🇮🇹', 'Adaptación fonética de Italia.'],
+            ['paises', '意大利语', 'Yìdàlìyǔ', 'Idioma italiano', '🇮🇹', '意大利 (Italia) + 语 (idioma).'],
+            ['paises', '语言', 'yǔyán', 'Idioma / Lenguaje', '💬', 'Sustantivo general para cualquier idioma.'],
+            ['paises', '外语', 'wàiyǔ', 'Idioma extranjero', '🌐', '外 (exterior/extranjero) + 语 (idioma).'],
+            ['paises', '足球', 'zúqiú', 'Fútbol (balompié)', '⚽', 'Literalmente: "Pie (足) + Balón (球)". Se juega con 踢 (tī).'],
+            ['paises', '篮球', 'lánqiú', 'Básquetbol / Baloncesto', '🏀', 'Literalmente: "Canasta (篮) + Balón (球)". Se juega con 打 (dǎ).'],
+
+            // 6A. CLASIFICADORES (量词)
+            ['clasificadores', '个', 'gè', 'Clasificador general (personas, frutas, unidades)', '📦', 'El comodín más usado del mandarín.'],
+            ['clasificadores', '只', 'zhī', 'Clasificador de animales pequeños/medianos', '🐾', 'Se usa para perros, gatos, tigres, ratones y aves.'],
+            ['clasificadores', '条', 'tiáo', 'Clasificador de cosas alargadas y flexibles', '🐍', 'Peces, serpientes, ríos, pantalones y papas fritas.'],
+            ['clasificadores', '朵', 'duǒ', 'Clasificador de flores y nubes', '🌸', 'Usado para cosas con forma esponjosa o de pétalos.'],
+            ['clasificadores', '把', 'bǎ', 'Clasificador de objetos con mango o agarradera', '☂️', 'Sillas, cuchillos, paraguas, llaves.'],
+            ['clasificadores', '包', 'bāo', 'Clasificador de paquetes o bolsas', '🛍️', 'Ej: 一包薯片 (un paquete de papas).'],
+            ['clasificadores', '本', 'běn', 'Clasificador de libros, cuadernos y revistas', '📘', 'Exclusivo para volúmenes encuadernados.'],
+            ['clasificadores', '部', 'bù', 'Clasificador de películas, novelas y teléfonos', '🎬', 'Obras audiovisuales o dispositivos móviles.'],
+            ['clasificadores', '杯', 'bēi', 'Clasificador de tazas, vasos y copas', '☕', 'Ej: 两杯咖啡 (dos tazas de café).'],
+            ['clasificadores', '瓶', 'píng', 'Clasificador de botellas', '🍾', 'Ej: 一瓶水 (una botella de agua).'],
+            ['clasificadores', '块', 'kuài', 'Clasificador de trozos, tajadas y moneda (yuan)', '🍰', 'Tajadas de pastel, sandía o dinero hablado.'],
+            ['clasificadores', '层', 'céng', 'Clasificador de pisos o niveles de edificios', '🏢', 'También se usa para capas de un pastel.'],
+
+            // 6B. ADJETIVOS, CUALIDADES Y EMOCIONES
+            ['adjetivos', '好', 'hǎo', 'Bueno / Bien', '👍', 'Mujer (女) + Hijo (子) = bondad y bienestar.'],
+            ['adjetivos', '坏', 'huài (不好 bù hǎo)', 'Malo / Estropeado', '👎', 'Opuesto de 好.'],
+            ['adjetivos', '好吃', 'hǎochī', 'Rico de comer / Delicioso', '😋', 'Literalmente: "Bueno (好) de comer (吃)".'],
+            ['adjetivos', '好喝', 'hǎohē', 'Rico de beber / Sabroso', '🧋', 'Literalmente: "Bueno (好) de beber (喝)".'],
+            ['adjetivos', '好看', 'hǎokàn', 'Bonito de ver / Interesante', '🤩', 'Se usa para personas guapas, ropa o películas buenas.'],
+            ['adjetivos', '难吃', 'nánchī', 'Feo de comer (sabe mal)', '🤢', 'Literalmente: "Difícil de comer".'],
+            ['adjetivos', '难喝', 'nánhē', 'Malo de beber', '😖', 'Literalmente: "Difícil de beber".'],
+            ['adjetivos', '难看', 'nánkàn', 'Feo de ver / Aburrido', '🙈', 'Opuesto de 好看.'],
+            ['adjetivos', '漂亮', 'piàoliang', 'Lindo / Bonito / Guapa', '✨', 'Adjetivo cotidiano para elogiar belleza.'],
+            ['adjetivos', '美丽', 'měilì', 'Hermoso / Bello (poético)', '🌹', 'Ideal para paisajes o elogios elegantes.'],
+            ['adjetivos', '丑', 'chǒu', 'Feo', '👹', 'Antónimo directo de 美 (bello).'],
+            ['adjetivos', '可爱', 'kě\'ài', 'Adorable / Tierno', '🥰', 'Literalmente: "Digno de ser amado".'],
+            ['adjetivos', '大', 'dà', 'Grande', '🐘', 'Una persona con los brazos y piernas extendidos.'],
+            ['adjetivos', '小', 'xiǎo', 'Pequeño', '🐁', 'Opuesto de 大.'],
+            ['adjetivos', '便宜', 'piányi', 'Barato / Económico', '🏷️', 'Opuesto de 贵 (guì - caro).'],
+            ['adjetivos', '热', 'rè', 'Caliente (clima o general)', '🥵', 'Las 4 gotas inferiores representan fuego ardiente.'],
+            ['adjetivos', '烫', 'tàng', 'Hirviendo (quema al tacto o boca)', '🔥', '湯 (agua caliente) + 火 (fuego) debajo.'],
+            ['adjetivos', '冷', 'lěng', 'Frío (ambiental)', '🥶', 'Lleva el radical de dos gotas de hielo (冫).'],
+            ['adjetivos', '冰', 'bīng', 'Helado / Hielo', '🧊', 'Agua (水) con cristales de hielo (冫).'],
+            ['adjetivos', '简单', 'jiǎndān', 'Fácil / Sencillo', '👌', 'Opuesto de 难 (difícil).'],
+            ['adjetivos', '难', 'nán', 'Difícil / Complicado', '🧗', 'Adjetivo base para indicar dificultad.'],
+            ['adjetivos', '高兴', 'gāoxìng', 'Feliz / Contento (estado temporal)', '😄', 'Alegría momentánea (ej. 很高兴认识你).'],
+            ['adjetivos', '快乐', 'kuàilè', 'Feliz / Dichoso (duradero)', '🥳', 'Usado en felicitaciones (生日快乐).'],
+            ['adjetivos', '忙', 'máng', 'Ocupado', '🏃‍♂️', 'Corazón (忄) + perder (亡).'],
+            ['adjetivos', '怕', 'pà', 'Tener miedo / Temer', '😱', 'Sentir temor ante algo.'],
+            ['adjetivos', '生气', 'shēngqì', 'Enojado / Enfadarse', '😡', 'Literalmente: "Generar aire/vapor".'],
+            ['adjetivos', '饿', 'è', 'Hambriento', '🤤', 'Radical de comida (饣) + yo (我).'],
+            ['adjetivos', '我饿了', 'wǒ è le', 'Tengo hambre (ya me dio hambre)', '🍽️', 'La partícula 了 (le) indica cambio de estado.'],
+
+            // 6C. COLORES (色彩)
+            ['colores', '红色', 'hóngsè', 'Rojo', '🔴', 'Color de la buena fortuna y alegría en China.'],
+            ['colores', '绿色', 'lǜsè', 'Verde', '🟢', 'Pronuncia la ü con labios en U diciendo I.'],
+            ['colores', '蓝色', 'lánsè', 'Azul', '🔵', 'Representa el cielo y la serenidad.'],
+            ['colores', '黄色', 'huángsè', 'Amarillo', '🟡', 'Color imperial histórico en China.'],
+            ['colores', '白色', 'báisè', 'Blanco', '⚪', 'Simboliza pureza y claridad.'],
+            ['colores', '黑色', 'hēisè', 'Negro', '⚫', 'Color de elegancia y profundidad.'],
+            ['colores', '橙色', 'chéngsè', 'Naranja (color)', '🟠', 'Toma su nombre de la fruta naranja (橙).'],
+            ['colores', '紫色', 'zǐsè', 'Morado / Púrpura', '🟣', 'Asociado con la nobleza y la estrella polar.'],
+
+            // 7A. ZODIACO CHINO Y OTROS ANIMALES
+            ['animales', '老鼠', 'lǎoshǔ (鼠 shǔ)', 'Ratón / Rata (Zodiaco #1)', '🐭', 'Primer animal del ciclo del zodiaco chino.'],
+            ['animales', '牛', 'niú', 'Buey / Vaca / Toro (Zodiaco #2)', '🐮', 'Segundo animal del zodiaco; símbolo de constancia.'],
+            ['animales', '老虎', 'lǎohǔ (虎 hǔ)', 'Tigre (Zodiaco #3)', '🐯', 'Rey de las bestias en la cultura china.'],
+            ['animales', '兔', 'tù', 'Conejo (Zodiaco #4)', '🐰', 'Cuarto signo del zodiaco chino.'],
+            ['animales', '龙', 'lóng', 'Dragón (Zodiaco #5)', '🐉', 'Único animal mítico del zodiaco; símbolo imperial.'],
+            ['animales', '蛇', 'shé', 'Serpiente (Zodiaco #6)', '🐍', 'Se cuenta con el clasificador 条 (tiáo).'],
+            ['animales', '马', 'mǎ', 'Caballo (Zodiaco #7)', '🐴', 'Séptimo animal del zodiaco chino.'],
+            ['animales', '羊', 'yáng', 'Cabra / Oveja (Zodiaco #8)', '🐐', 'Octavo signo del zodiaco chino.'],
+            ['animales', '猴', 'hóu', 'Mono (Zodiaco #9)', '🐵', 'Noveno signo; famoso por el Rey Mono (孫悟空).'],
+            ['animales', '鸡', 'jī', 'Gallo / Pollo (Zodiaco #10)', '🐓', 'Décimo signo del zodiaco.'],
+            ['animales', '狗', 'gǒu', 'Perro (Zodiaco #11)', '🐶', 'Undécimo signo; símbolo de lealtad.'],
+            ['animales', '猪', 'zhū', 'Cerdo (Zodiaco #12)', '🐷', 'Duodécimo signo; representa abundancia.'],
+            ['animales', '猫', 'māo', 'Gato', '🐱', 'Su pronunciación (māo) imita el maullido.'],
+            ['animales', '熊', 'xióng', 'Oso', '🐻', 'Animal fuerte del bosque.'],
+            ['animales', '熊猫', 'xióngmāo', 'Oso panda', '🐼', 'Literalmente: "Oso (熊) + Gato (猫)". Tesoro nacional de China.'],
+            ['animales', '鱼', 'yú', 'Pez / Pescado', '🐟', 'Suena igual que 余 (abundancia). Se cuenta con 条.'],
+            ['animales', '蜘蛛', 'zhīzhū', 'Araña', '🕷️', 'Ambos caracteres llevan el radical de insecto (虫).'],
+
+            // 7B. PLATOS Y COMIDAS
+            ['comidas', '米饭', 'mǐfàn', 'Arroz cocido (blanco)', '🍚', 'Alimento base cotidiano.'],
+            ['comidas', '炒饭', 'chǎofàn', 'Arroz frito / salteado', '🥘', '炒 (saltear al wok) + 饭 (arroz).'],
+            ['comidas', '面条', 'miàntiáo', 'Fideos / Tallarines', '🍜', 'Símbolo tradicional de larga vida.'],
+            ['comidas', '粥', 'zhōu', 'Gachas de arroz (congee)', '🥣', 'Desayuno reconfortante muy popular en China.'],
+            ['comidas', '意大利面', 'yìdàlìmiàn', 'Espagueti / Pasta italiana', '🍝', 'Literalmente: "Fideos (面) de Italia (意大利)".'],
+            ['comidas', '饺子', 'jiǎozi', 'Dumplings (empanadillas chinas)', '🥟', 'Imprescindibles en el Año Nuevo Chino.'],
+            ['comidas', '包子', 'bāozi', 'Baozi (panecillo relleno al vapor)', '🥮', 'Bollo esponjoso cocido al vapor.'],
+            ['comidas', '汉堡', 'hànbǎo', 'Hamburguesa', '🍔', 'Préstamo fonético de Hamburger.'],
+            ['comidas', '热狗', 'règǒu', 'Hot dog / Perro caliente', '🌭', 'Traducción literal: "Caliente (热) + Perro (狗)".'],
+            ['comidas', '汤', 'tāng', 'Sopa / Caldo', '🍲', 'En China suele tomarse durante o al final de la comida.'],
+            ['comidas', '鸡肉', 'jīròu', 'Carne de pollo', '🍗', '鸡 (pollo) + 肉 (carne).'],
+            ['comidas', '沙拉', 'shālā', 'Ensalada', '🥗', 'Adaptación fonética de "salad".'],
+            ['comidas', '薯条', 'shǔtiáo', 'Papas a la francesa', '🍟', 'Literalmente: "Tiras (条) de papa (薯)".'],
+            ['comidas', '薯片', 'shǔpiàn', 'Papas de paquete (chips)', '🥔', 'Literalmente: "Láminas/hojas (片) de papa (薯)".'],
+            ['comidas', '早饭', 'zǎofàn', 'Desayuno', '🥐', 'Comida de la mañana (早).'],
+            ['comidas', '午饭', 'wǔfàn', 'Almuerzo', '🍱', 'Comida del mediodía (午).'],
+            ['comidas', '晚饭', 'wǎnfàn', 'Cena', '🍛', 'Comida de la noche (晚).'],
+            ['comidas', '糖', 'táng', 'Azúcar / Dulce / Caramelo', '🍬', 'Sirve tanto para el ingrediente como para una golosina.'],
+
+            // 7C. BEBIDAS
+            ['bebidas', '水', 'shuǐ', 'Agua', '💧', 'Pictograma de una corriente de agua fluyendo.'],
+            ['bebidas', '热水', 'rèshuǐ', 'Agua caliente', '♨️', 'Bebida favorita en la cultura china para la salud.'],
+            ['bebidas', '茶', 'chá', 'Té', '🍵', 'Bebida milenaria originaria de China.'],
+            ['bebidas', '绿茶', 'lǜchá', 'Té verde', '🍃', '绿 (verde) + 茶 (té).'],
+            ['bebidas', '咖啡', 'kāfēi', 'Café', '☕', 'Adaptación fonética de "coffee".'],
+            ['bebidas', '果汁', 'guǒzhī', 'Jugo de fruta', '🧃', '果 (fruta) + 汁 (zumo/jugo).'],
+            ['bebidas', '汽水', 'qìshuǐ', 'Gaseosa / Agua con gas', '🫧', 'Literalmente: "Agua (水) con vapor/gas (汽)".'],
+            ['bebidas', '可乐', 'kělè', 'Coca-Cola / Refresco de cola', '🥤', 'Significa además "divertido / que da alegría".'],
+            ['bebidas', '啤酒', 'píjiǔ', 'Cerveza', '🍺', 'Bebida alcohólica fermentada.'],
+            ['bebidas', '葡萄酒', 'pútáojiǔ', 'Vino de uva', '🍷', '葡萄 (uva) + 酒 (licor/vino).'],
+            ['bebidas', '红酒', 'hóngjiǔ', 'Vino tinto', '🍷', 'Literalmente: "Vino (酒) rojo (红)".'],
+            ['bebidas', '羊奶', 'yángnǎi', 'Leche de cabra / oveja', '🥛', '羊 (cabra) + 奶 (leche).'],
+            ['bebidas', '牛奶', 'niúnǎi', 'Leche de vaca', '🥛', '牛 (vaca) + 奶 (leche).'],
+
+            // 7D. VERDURAS Y HORTALIZAS (蔬菜)
+            ['verduras', '蔬菜', 'shūcài', 'Verduras / Vegetales', '🥬', 'Término general para las hortalizas.'],
+            ['verduras', '西红柿', 'xīhóngshì', 'Tomate', '🍅', 'Literalmente: "Caqui (柿) rojo (红) de occidente (西)".'],
+            ['verduras', '土豆', 'tǔdòu', 'Papa / Patata', '🥔', 'Literalmente: "Frijol (豆) de la tierra (土)".'],
+            ['verduras', '洋葱', 'yángcōng', 'Cebolla cabezona', '🧅', 'Literalmente: "Cebolla (葱) occidental/oceánica (洋)".'],
+            ['verduras', '大葱', 'dàcōng', 'Cebolla larga / Puerro', '🌱', 'Literalmente: "Cebolla (葱) grande (大)".'],
+            ['verduras', '豆角', 'dòujiǎo', 'Habichuela / Judía verde', '🫛', 'Literalmente: "Cuerno (角) de frijol (豆)".'],
+            ['verduras', '胡萝卜', 'húluóbo', 'Zanahoria', '🥕', 'Rábano (萝卜) traído del norte/oeste (胡).'],
+            ['verduras', '蘑菇', 'mógu', 'Champiñón / Hongo', '🍄', 'Ambos caracteres tienen el radical de planta (艹) arriba.'],
+            ['verduras', '香菜', 'xiāngcài', 'Cilantro', '🌿', 'Literalmente: "Verdura (菜) aromática (香)".'],
+            ['verduras', '黄瓜', 'huángguā', 'Pepino', '🥒', 'Literalmente: "Melón (瓜) amarillo (黄)".'],
+            ['verduras', '西葫芦', 'xīhúlu', 'Calabacín / Zucchini', '🥒', 'Calabaza (葫芦) occidental (西).'],
+            ['verduras', '南瓜', 'nánguā', 'Calabaza / Ahuyama', '🎃', 'Literalmente: "Melón (瓜) del sur (南)".'],
+            ['verduras', '甜菜', 'tiáncài', 'Remolacha / Betabel', '🟣', 'Literalmente: "Verdura (菜) dulce (甜)".'],
+
+            // 7E. FRUTAS (水果)
+            ['frutas', '水果', 'shuǐguǒ', 'Fruta (en general)', '🧺', 'Literalmente: "Agua (水) + Fruto (果)" por su jugosidad.'],
+            ['frutas', '香蕉', 'xiāngjiāo', 'Banana / Plátano', '🍌', 'Literalmente: "Planta tropical (蕉) aromática (香)".'],
+            ['frutas', '芒果', 'mángguǒ', 'Mango', '🥭', 'Préstamo fonético de "mango" + 果 (fruta).'],
+            ['frutas', '柠檬', 'níngméng', 'Limón', '🍋', 'Adaptación fonética con el radical de árbol (木).'],
+            ['frutas', '苹果', 'píngguǒ', 'Manzana', '🍎', 'Asociada con la paz (平安 píng\'ān).'],
+            ['frutas', '葡萄', 'pútáo', 'Uva', '🍇', 'Llegó a China por la antigua Ruta de la Seda.'],
+            ['frutas', '草莓', 'cǎoméi', 'Fresa', '🍓', 'Literalmente: "Baya (莓) de la hierba (草)".'],
+            ['frutas', '桃子', 'táozi', 'Durazno / Melocotón', '🍑', 'Símbolo de longevidad en la mitología china.'],
+            ['frutas', '西瓜', 'xīguā', 'Sandía', '🍉', 'Literalmente: "Melón (瓜) de occidente (西)".'],
+            ['frutas', '菠萝', 'bōluó', 'Piña / Ananá', '🍍', 'Fruta tropical muy apreciada en Asia.'],
+            ['frutas', '橘子', 'júzi', 'Mandarina', '🍊', 'Cítrico dulce fácil de pelar.'],
+            ['frutas', '橙子', 'chéngzi', 'Naranja (fruta)', '🍊', 'Fruta cítrica de la cual toma nombre el color 橙色.'],
+
+            // 7F. UTENSILIOS DE MESA Y OBJETOS DEL HOGAR
+            ['objetos', '筷子', 'kuàizi', 'Palillos chinos', '🥢', 'Lleva el radical de bambú (⺮) en la parte superior.'],
+            ['objetos', '勺子', 'sháozi', 'Cuchara', '🥄', 'Utensilio para tomar sopa (汤).'],
+            ['objetos', '叉子', 'chāzi', 'Tenedor', '🍴', 'El carácter 叉 tiene forma de puntas cruzadas.'],
+            ['objetos', '刀', 'dāo', 'Cuchillo', '🔪', 'Se cuenta con el clasificador 把 (bǎ) por tener mango.'],
+            ['objetos', '手表', 'shǒubiǎo', 'Reloj de mano / pulsera', '⌚', 'Literalmente: "Mano (手) + Reloj/medidor (表)".'],
+            ['objetos', '车', 'chē', 'Auto / Vehículo / Carro', '🚗', 'Representa un carruaje visto desde arriba.'],
+            ['objetos', '书', 'shū', 'Libro', '📕', 'Se cuenta con el clasificador 本 (běn).'],
+            ['objetos', '床', 'chuáng', 'Cama', '🛏️', 'Incluye el radical de madera (木) por su estructura.'],
+            ['objetos', '毛衣', 'máoyī', 'Suéter / Jersey de lana', '🧥', 'Literalmente: "Lana/pelo (毛) + Ropa (衣)".']
+        ];
+
+        // Transformar arreglo compacto en objetos enriquecidos
+        const vocabData = rawVocab.map(([cat, hanzi, pinyin, es, icon, note], idx) => {
+            const catObj = categories.find(c => c.id === cat) || categories[0];
+            return {
+                id: idx,
+                cat,
+                catName: catObj.name,
+                color: catObj.color,
+                hanzi,
+                pinyin,
+                es,
+                icon,
+                note
+            };
+        });
+
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let currentItem = vocabData[0];
+        let quizTarget = null;
+        let quizScore = 0;
+        let quizStreak = 0;
+
+        // --- WEB AUDIO API SYNTHESIZER ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq = 480, type = 'sine', dur = 0.18) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.35, audioCtx.currentTime + dur);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + dur);
+        }
+
+        // --- MANDARIN SPEECH SYNTHESIS ---
+        function speakWord(text, rate = 0.88) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const cleanText = text.replace(/\(.*?\)/g, '').trim();
+            const utter = new SpeechSynthesisUtterance(cleanText);
+            utter.lang = 'zh-CN';
+            utter.rate = rate;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // --- PARTICLE ENGINE ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color, symbol = null) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.symbol = symbol;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed - 2.2;
+                this.size = Math.random() * 7 + 4;
+                this.alpha = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.17;
+                this.alpha -= 0.02;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                if (this.symbol) {
+                    ctx.font = 'bold 22px sans-serif';
+                    ctx.fillStyle = this.color;
+                    ctx.fillText(this.symbol, this.x, this.y);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = this.color;
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        function burstParticles(x, y, color, icon, hanzi) {
+            for (let i = 0; i < 32; i++) {
+                let sym = null;
+                if (i < 3) sym = icon;
+                else if (i < 6) sym = hanzi[0];
+                particles.push(new Particle(x, y, color, sym));
+            }
+        }
+
+        function animateLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateLoop);
+        }
+        animateLoop();
+
+        // --- RENDERIZAR NAVBAR ---
+        function renderNavbar() {
+            const nav = document.getElementById('category-navbar');
+            nav.innerHTML = '';
+            categories.forEach(cat => {
+                const count = cat.id === 'all'
+                    ? vocabData.length
+                    : vocabData.filter(v => v.cat === cat.id).length;
+
+                const btn = document.createElement('button');
+                btn.className = `cat-pill ${activeCategory === cat.id ? 'active' : ''}`;
+                btn.innerHTML = `
+                    <span>${cat.icon}</span>
+                    <span>${cat.name}</span>
+                    <span class="cat-count">${count}</span>
+                `;
+                btn.onclick = () => {
+                    activeCategory = cat.id;
+                    document.documentElement.style.setProperty('--active-color', cat.color);
+                    renderNavbar();
+                    renderGrid();
+                    if (document.getElementById('quiz-section').style.display === 'block') {
+                        nextQuizRound();
+                    }
+                };
+                nav.appendChild(btn);
+            });
+            document.getElementById('total-counter').textContent = `${vocabData.length} palabras interactivas separadas una por una • ${categories.length - 1} secciones`;
+        }
+
+        // --- RENDERIZAR GRID ---
+        function getFilteredVocab() {
+            return vocabData.filter(item => {
+                const matchCat = activeCategory === 'all' || item.cat === activeCategory;
+                const q = searchQuery.toLowerCase().trim();
+                const matchSearch = !q ||
+                    item.es.toLowerCase().includes(q) ||
+                    item.pinyin.toLowerCase().includes(q) ||
+                    item.hanzi.includes(q);
+                return matchCat && matchSearch;
+            });
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('vocab-grid');
+            const list = getFilteredVocab();
+            const catObj = categories.find(c => c.id === activeCategory);
+            document.getElementById('grid-title').innerHTML = `${catObj.icon} ${catObj.name} <span style="font-size:0.9rem; opacity:0.65;">(${list.length} tarjetas)</span>`;
+
+            grid.innerHTML = '';
+            list.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'vocab-card';
+                card.style.setProperty('--card-color', item.color);
+                card.innerHTML = `
+                    <div class="card-icon">${item.icon}</div>
+                    <div class="card-hanzi">${item.hanzi}</div>
+                    <div class="card-pinyin">${item.pinyin}</div>
+                    <div class="card-es">${item.es}</div>
+                `;
+                card.onclick = (e) => selectVocabItem(item, e.clientX, e.clientY, idx);
+                grid.appendChild(card);
+            });
+        }
+
+        // --- SELECCIONAR TARJETA ---
+        function selectVocabItem(item, x, y, idx = 0) {
+            currentItem = item;
+            document.documentElement.style.setProperty('--active-color', item.color);
+            document.getElementById('stage-cat').textContent = `${item.catName}`;
+            document.getElementById('stage-emoji').textContent = item.icon;
+            document.getElementById('stage-hanzi').textContent = item.hanzi;
+            document.getElementById('stage-pinyin').textContent = item.pinyin;
+            document.getElementById('stage-es').textContent = item.es;
+            document.getElementById('stage-note').textContent = `💡 ${item.note}`;
+
+            // Desglose carácter por carácter
+            const breakdown = document.getElementById('char-breakdown');
+            breakdown.innerHTML = '';
+            const chars = [...item.hanzi].filter(ch => /[\u4e00-\u9fa5]/.test(ch));
+            chars.forEach(ch => {
+                const chip = document.createElement('span');
+                chip.className = 'char-chip';
+                chip.textContent = `🔊 ${ch}`;
+                chip.onclick = (ev) => {
+                    ev.stopPropagation();
+                    playTone(620, 'triangle', 0.14);
+                    speakWord(ch, 0.8);
+                    burstParticles(ev.clientX, ev.clientY, item.color, ch, ch);
+                };
+                breakdown.appendChild(chip);
+            });
+
+            playTone(340 + (idx % 12) * 35, 'sine', 0.2);
+            speakWord(item.hanzi, 0.9);
+            if (x && y) burstParticles(x, y, item.color, item.icon, item.hanzi);
+        }
+
+        function replayCurrent(e) {
+            playTone(540, 'triangle', 0.18);
+            speakWord(currentItem.hanzi, 0.88);
+            burstParticles(e.clientX, e.clientY, currentItem.color, currentItem.icon, currentItem.hanzi);
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderGrid();
+        }
+
+        // --- MODO QUIZ ARCADE ---
+        function setMode(mode) {
+            document.getElementById('btn-explore').classList.toggle('active', mode === 'explore');
+            document.getElementById('btn-quiz').classList.toggle('active', mode === 'quiz');
+            document.getElementById('explore-section').style.display = mode === 'explore' ? 'block' : 'none';
+            document.getElementById('quiz-section').style.display = mode === 'quiz' ? 'block' : 'none';
+            if (mode === 'quiz') nextQuizRound();
+        }
+
+        function nextQuizRound() {
+            const pool = getFilteredVocab().length >= 4 ? getFilteredVocab() : vocabData;
+            quizTarget = pool[Math.floor(Math.random() * pool.length)];
+
+            document.getElementById('quiz-cat-badge').textContent = quizTarget.catName;
+            document.getElementById('quiz-hanzi').textContent = quizTarget.hanzi;
+            document.getElementById('quiz-pinyin').textContent = quizTarget.pinyin;
+            speakWord(quizTarget.hanzi, 0.88);
+
+            const opts = [quizTarget];
+            while (opts.length < 4) {
+                const candidate = pool[Math.floor(Math.random() * pool.length)];
+                if (!opts.some(o => o.id === candidate.id)) opts.push(candidate);
+            }
+            opts.sort(() => Math.random() - 0.5);
+
+            const container = document.getElementById('quiz-options');
+            container.innerHTML = '';
+            opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.innerHTML = `<span style="font-size:1.6rem;">${opt.icon}</span> <span>${opt.es}</span>`;
+                btn.onclick = (e) => verifyQuiz(opt, e);
+                container.appendChild(btn);
+            });
+        }
+
+        function verifyQuiz(selected, e) {
+            if (selected.id === quizTarget.id) {
+                quizScore += 10 + quizStreak * 2;
+                quizStreak++;
+                playTone(680, 'triangle', 0.25);
+                burstParticles(e.clientX, e.clientY, selected.color, selected.icon, '✓');
+                setTimeout(nextQuizRound, 550);
+            } else {
+                quizStreak = 0;
+                playTone(160, 'sawtooth', 0.3);
+            }
+            document.getElementById('quiz-score').textContent = quizScore;
+            document.getElementById('quiz-streak').textContent = quizStreak;
+        }
+
+        // Inicialización
+        renderNavbar();
+        renderGrid();
+        selectVocabItem(vocabData[0]);
+    </script>
+</body>
+</html>
