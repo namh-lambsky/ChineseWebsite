@@ -593,9 +593,7 @@
             { id: 'all', name: 'Todas', icon: '🌟', color: '#ff2a5f' },
             { id: 'saludos', name: 'Saludos y Cortesía', icon: '👋', color: '#f43f5e' },
             { id: 'pronombres', name: 'Pronombres y Preguntas', icon: '🫵', color: '#ec4899' },
-            { id: 'particulas', name: 'Adverbios y Partículas', icon: '🧩', color: '#d946ef' },
             { id: 'familia', name: 'Familia y Personas', icon: '👨‍👩‍👧‍👦', color: '#a855f7' },
-            { id: 'cuerpo', name: 'Cuerpo Humano (身体)', icon: '👂', color: '#c084fc' },
             { id: 'profesiones', name: 'Profesiones y Lugares', icon: '🏥', color: '#8b5cf6' },
             { id: 'verbos', name: 'Verbos y Rutina', icon: '⚡', color: '#6366f1' },
             { id: 'tiempo', name: 'Estaciones y Calendario', icon: '🗓️', color: '#0ea5e9' },
@@ -609,8 +607,7 @@
             { id: 'bebidas', name: 'Bebidas (饮料)', icon: '🧋', color: '#ef4444' },
             { id: 'verduras', name: 'Verduras (蔬菜)', icon: '🥦', color: '#22c55e' },
             { id: 'frutas', name: 'Frutas (水果)', icon: '🍉', color: '#fb7185' },
-            { id: 'objetos', name: 'Utensilios y Objetos', icon: '🥢', color: '#38bdf8' },
-            { id: 'transporte', name: 'Transporte (交通)', icon: '🚆', color: '#60a5fa' }
+            { id: 'objetos', name: 'Utensilios y Objetos', icon: '🥢', color: '#38bdf8' }
         ];
 
         // BASE DE DATOS COMPLETA — CADA PALABRA SEPARADA INDIVIDUALMENTE CON SU ILUSTRACIÓN
@@ -632,9 +629,6 @@
             ['saludos', '您贵姓？', 'nín guìxìng?', '¿Su honorable apellido?', '🪪', 'Forma muy respetuosa de preguntar el apellido.'],
             ['saludos', '先生', 'xiānsheng', 'Señor / Don / Esposo', '🤵', 'Título de respeto equivalente a "Señor".'],
             ['saludos', '马上就来', 'mǎshàng jiù lái', '¡Ya mismo viene! / ¡Enseguida voy!', '🏃', 'Literalmente: "Sobre el caballo ya viene".'],
-            ['saludos', '很高兴认识你', 'hěn gāoxìng rènshi nǐ', 'Mucho gusto / Un gusto conocerte', '🤝', '高兴 (alegría momentánea) + 认识 (conocer) + 你.'],
-            ['saludos', '你认识我吗？', 'nǐ rènshi wǒ ma?', '¿Me conoces?', '🤔', 'Oración afirmativa + 吗 al final = pregunta Sí/No.'],
-            ['saludos', '我认识你吗？', 'wǒ rènshi nǐ ma?', '¿Te conozco?', '🧐', 'Igual que la anterior, solo se invierte el orden de 我 y 你.'],
 
             // 1B. PRONOMBRES, DEMOSTRATIVOS E INTERROGATIVOS
             ['pronombres', '我', 'wǒ', 'Yo', '🙋‍♂️', 'Pronombre de primera persona singular.'],
@@ -665,20 +659,6 @@
             ['pronombres', '吗', 'ma', 'Partícula de pregunta Sí/No', '❔', 'Colócala al final de cualquier oración afirmativa para hacerla pregunta.'],
             ['pronombres', '呢', 'ne', '¿Y tú? / ¿Y...? (partícula)', '🔄', 'Se usa para devolver una pregunta (ej. 我很好，你呢？).'],
             ['pronombres', '问题', 'wèntí', 'Pregunta / Problema', '💡', 'Puede significar tanto una duda como un inconveniente.'],
-            ['pronombres', '什么时候', 'shénme shíhou', '¿Cuándo?', '⏳', 'Literalmente: "¿Qué momento?". Va antes del verbo (ej. 你什么时候去？).'],
-            ['pronombres', '你去哪儿？', 'nǐ qù nǎr?', '¿A dónde vas?', '🚶', '去 (ir) + 哪儿 (dónde). En el sur se dice 你去哪里？.'],
-            ['pronombres', '几月？', 'jǐ yuè?', '¿Qué mes?', '📅', 'Se usa 几 porque los meses van del 1 al 12 (menos de 10-12).'],
-            ['pronombres', '你做什么？', 'nǐ zuò shénme?', '¿Qué haces?', '🤷', 'Para "¿qué estás haciendo ahora?" se dice 你在做什么？.'],
-
-            // 1C. ADVERBIOS Y PARTÍCULAS GRAMATICALES
-            ['particulas', '不', 'bù', 'No (negación general)', '🚫', 'Niega presente y futuro. Cambia a bú antes de tono 4 (不是 búshì).'],
-            ['particulas', '没', 'méi', 'No (en pasado / no tener)', '⛔', 'Niega acciones pasadas: 我没去 (no fui). 有 siempre se niega con 没.'],
-            ['particulas', '也', 'yě', 'También', '🔁', 'Va después del sujeto y antes del verbo: 我也喜欢 (a mí también me gusta).'],
-            ['particulas', '也不', 'yě bù', 'Tampoco', '🙅', '也 (también) + 不 (no): 我也不喜欢 (a mí tampoco me gusta).'],
-            ['particulas', '都', 'dōu', 'Todos / Ambos', '👥', 'Va después de un sujeto plural y antes del verbo: 我们都是学生.'],
-            ['particulas', '最', 'zuì', 'El más / Lo más (superlativo)', '🏆', 'Se pone antes del adjetivo o verbo: 最好 (el mejor), 最喜欢 (favorito).'],
-            ['particulas', '正在', 'zhèngzài (在 zài)', 'Estar + -ando (gerundio)', '🔄', '在/正在 + verbo = acción en curso: 我在吃饭 (estoy comiendo).'],
-            ['particulas', '了', 'le', 'Partícula de acción completada / cambio', '✅', 'Marca que algo ya ocurrió (我吃了 = ya comí) o un cambio (我饿了).'],
 
             // 2A. FAMILIA Y PERSONAS
             ['familia', '家人', 'jiārén', 'Familia (miembros)', '👨‍👩‍👧‍👦', 'Literalmente: "Personas de la casa".'],
@@ -705,12 +685,6 @@
             ['familia', '名字', 'míngzi', 'Nombre', '🏷️', 'Nombre de pila o completo.'],
             ['familia', '姓', 'xìng', 'Apellido (o apellidarse)', '📜', 'En China el apellido siempre va antes del nombre.'],
             ['familia', '岁', 'suì', 'Años de edad', '🎂', 'Clasificador exclusivo para decir la edad.'],
-            ['familia', '男人', 'nánrén', 'Hombre', '👨', '男 = campo (田) + fuerza (力): quien trabaja el campo.'],
-            ['familia', '女人', 'nǚrén', 'Mujer', '👩', '女 (mujer) + 人 (persona).'],
-            ['familia', '亲爱的', 'qīn\'ài de', 'Cariño / Amor (apodo)', '💕', 'Literalmente: "Querido/a". También se usa 宝贝 (bǎobèi).'],
-
-            // 2A-2. CUERPO HUMANO
-            ['cuerpo', '耳朵', 'ěrduo', 'Oreja', '👂', '耳 es el pictograma de una oreja; 朵 se pronuncia en tono neutro.'],
 
             // 2B. PROFESIONES E INSTITUCIONES
             ['profesiones', '老师', 'lǎoshī', 'Profesor / Maestro', '👨‍🏫', 'Término de gran respeto hacia quien enseña.'],
@@ -727,9 +701,6 @@
             ['profesiones', '图书馆', 'túshūguǎn', 'Biblioteca', '📖', 'Edificio público o escolar para leer y prestar libros.'],
             ['profesiones', '餐厅', 'cāntīng', 'Restaurante / Comedor', '🍽️', 'Salón de comidas o restaurante.'],
             ['profesiones', '在', 'zài', 'Estar en / En (lugar)', '📌', 'Verbo de ubicación y preposición de lugar.'],
-            ['profesiones', '学校', 'xuéxiào', 'Escuela / Colegio', '🏫', 'Término general para cualquier centro educativo.'],
-            ['profesiones', '大学', 'dàxué', 'Universidad', '🎓', 'Literalmente: "Gran (大) estudio (学)".'],
-            ['profesiones', '厕所', 'cèsuǒ (卫生间 wèishēngjiān)', 'Baño', '🚻', '厕所 es directo; 卫生间 ("cuarto de higiene") suena más educado.'],
 
             // 3. VERBOS: COMUNICACIÓN, ESTUDIO, RUTINA, DEPORTE Y MODALES
             ['verbos', '说', 'shuō', 'Hablar / Decir', '💬', 'Lleva el radical de palabra/lenguaje a la izquierda.'],
@@ -781,17 +752,6 @@
             ['verbos', '喜欢', 'xǐhuan', 'Gustar', '❤️', 'Expresa agrado o afición por algo o alguien.'],
             ['verbos', '爱', 'ài', 'Amar / Encantar', '💖', 'Sentimiento profundo de amor o pasión.'],
             ['verbos', '祝', 'zhù', 'Desear (felicitaciones / buenos deseos)', '🥂', 'Ej: 祝你生日快乐 (Te deseo feliz cumpleaños).'],
-            ['verbos', '听', 'tīng', 'Escuchar / Oír', '👂', 'Lleva el radical de boca (口) a la izquierda.'],
-            ['verbos', '跑步', 'pǎobù', 'Correr / Trotar', '🏃', '跑 (correr) + 步 (paso).'],
-            ['verbos', '哭', 'kū', 'Llorar', '😢', 'Dos bocas (口口) arriba, como dos ojos llorando.'],
-            ['verbos', '给', 'gěi', 'Dar / Para (alguien)', '🎁', 'También funciona como preposición: 给你 (para ti).'],
-            ['verbos', '飞', 'fēi', 'Volar', '🕊️', 'Pictograma de un ave desplegando las alas.'],
-            ['verbos', '烤', 'kǎo', 'Asar / Hornear', '🍢', 'Radical de fuego (火) a la izquierda.'],
-            ['verbos', '考试', 'kǎoshì', 'Examen / Presentar un examen', '📝', 'Funciona como sustantivo y como verbo.'],
-            ['verbos', '最喜欢', 'zuì xǐhuan', 'Favorito / Lo que más me gusta', '🏆', '最 (lo más) + 喜欢. Ej: 我最喜欢的水果 (mi fruta favorita).'],
-            ['verbos', '吃早饭', 'chī zǎofàn', 'Desayunar', '🥐', 'Literalmente: "Comer el desayuno". Ver 做早饭 (prepararlo).'],
-            ['verbos', '吃午饭', 'chī wǔfàn', 'Almorzar', '🍱', 'Literalmente: "Comer el almuerzo".'],
-            ['verbos', '吃晚饭', 'chī wǎnfàn', 'Cenar', '🍛', 'Literalmente: "Comer la cena".'],
 
             // 4A. ESTACIONES, TIEMPO Y CALENDARIO
             ['tiempo', '季节', 'jìjié', 'Estación del año', '🗓️', 'Término general para las cuatro estaciones.'],
@@ -818,9 +778,6 @@
             ['tiempo', '星期五', 'xīngqīwǔ', 'Viernes (礼拜五 lǐbàiwǔ / 周五 zhōuwǔ)', '5️⃣', 'Semana + Día 5.'],
             ['tiempo', '星期六', 'xīngqīliù', 'Sábado (礼拜六 lǐbàiliù / 周六 zhōuliù)', '6️⃣', 'Semana + Día 6.'],
             ['tiempo', '星期天', 'xīngqītiān (星期日 xīngqīrì)', 'Domingo (礼拜天 / 周日)', '🌞', 'El domingo nunca usa el número 7; usa 天 (cielo) o 日 (sol).'],
-            ['tiempo', '现在', 'xiànzài', 'Ahora', '⌚', 'Va antes o después del sujeto (现在我… / 我现在…).'],
-            ['tiempo', '马上', 'mǎshàng', 'Ahora mismo / Enseguida', '⚡', 'Literalmente: "Sobre el caballo". Ver 马上就来.'],
-            ['tiempo', '公元前', 'gōngyuánqián', 'Antes de Cristo (a.C.)', '📜', '公元 (era común) + 前 (antes). d.C. = 公元 (gōngyuán).'],
 
             // 4B. NÚMEROS Y OPERACIONES MATEMÁTICAS
             ['numeros', '零', 'líng', 'Cero (0)', '0️⃣', 'Usado en dígitos, años y números telefónicos.'],
@@ -865,35 +822,15 @@
             ['paises', '哥伦比亚', 'Gēlúnbǐyà', 'Colombia', '🇨🇴', 'Adaptación fonética de Colombia.'],
             ['paises', '西班牙语', 'Xībānyáyǔ (西语 Xīyǔ)', 'Idioma español', '🗣️', 'En conversación suele abreviarse como 西语 (Xīyǔ).'],
             ['paises', '葡萄牙', 'Pútáoyá', 'Portugal', '🇵🇹', 'Curiosamente incluye los caracteres de "uva" (葡萄) y "diente" (牙).'],
-            ['paises', '葡萄牙语', 'Pútáoyáyǔ (葡语 Púyǔ)', 'Idioma portugués', '🇵🇹', 'En conversación suele abreviarse como 葡语 (Púyǔ).'],
+            ['paises', '葡萄牙语', 'Pútáoyáyǔ', 'Idioma portugués', '🇵🇹', '葡萄牙 (Portugal) + 语 (idioma).'],
             ['paises', '德国', 'Déguó', 'Alemania', '🇩🇪', 'Dé (virtud/fonético de Deutsch) + guó (país).'],
             ['paises', '德语', 'Déyǔ', 'Idioma alemán', '🇩🇪', '德 (Alemania) + 语 (idioma).'],
             ['paises', '意大利', 'Yìdàlì', 'Italia', '🇮🇹', 'Adaptación fonética de Italia.'],
-            ['paises', '意大利语', 'Yìdàlìyǔ (意语 Yìyǔ)', 'Idioma italiano', '🇮🇹', 'En conversación suele abreviarse como 意语 (Yìyǔ).'],
+            ['paises', '意大利语', 'Yìdàlìyǔ', 'Idioma italiano', '🇮🇹', '意大利 (Italia) + 语 (idioma).'],
             ['paises', '语言', 'yǔyán', 'Idioma / Lenguaje', '💬', 'Sustantivo general para cualquier idioma.'],
             ['paises', '外语', 'wàiyǔ', 'Idioma extranjero', '🌐', '外 (exterior/extranjero) + 语 (idioma).'],
             ['paises', '足球', 'zúqiú', 'Fútbol (balompié)', '⚽', 'Literalmente: "Pie (足) + Balón (球)". Se juega con 踢 (tī).'],
             ['paises', '篮球', 'lánqiú', 'Básquetbol / Baloncesto', '🏀', 'Literalmente: "Canasta (篮) + Balón (球)". Se juega con 打 (dǎ).'],
-            ['paises', '美国人', 'Měiguórén', 'Estadounidense', '🇺🇸', 'Regla: País + 人 = persona de ese país.'],
-            ['paises', '哥伦比亚人', 'Gēlúnbǐyàrén', 'Colombiano / Colombiana', '🇨🇴', '哥伦比亚 (Colombia) + 人.'],
-            ['paises', '波哥大', 'Bōgēdà', 'Bogotá', '🏙️', 'Capital de Colombia (哥伦比亚的首都).'],
-            ['paises', '西班牙人', 'Xībānyárén', 'Español / Española (persona)', '🇪🇸', '西班牙 (España) + 人.'],
-            ['paises', '葡萄牙人', 'Pútáoyárén', 'Portugués / Portuguesa (persona)', '🇵🇹', '葡萄牙 (Portugal) + 人.'],
-            ['paises', '韩国人', 'Hánguórén', 'Surcoreano / Surcoreana', '🇰🇷', '韩国 (Corea del Sur) + 人.'],
-            ['paises', '朝鲜', 'Cháoxiǎn', 'Corea del Norte', '🇰🇵', 'Nombre usado en China continental para Corea del Norte.'],
-            ['paises', '朝鲜人', 'Cháoxiǎnrén', 'Norcoreano / Norcoreana', '🇰🇵', '朝鲜 (Corea del Norte) + 人.'],
-            ['paises', '朝鲜语', 'Cháoxiǎnyǔ', 'Idioma coreano (Norte)', '🇰🇵', 'Es el mismo idioma que 韩语; cambia el nombre según la Corea.'],
-            ['paises', '法国', 'Fǎguó', 'Francia', '🇫🇷', '法 (fonético de France) + 国 (país).'],
-            ['paises', '法国人', 'Fǎguórén', 'Francés / Francesa (persona)', '🇫🇷', '法国 (Francia) + 人.'],
-            ['paises', '日本', 'Rìběn', 'Japón', '🇯🇵', 'Literalmente: "Origen (本) del sol (日)".'],
-            ['paises', '日本人', 'Rìběnrén', 'Japonés / Japonesa (persona)', '🇯🇵', '日本 (Japón) + 人.'],
-            ['paises', '日语', 'Rìyǔ (日文 Rìwén)', 'Idioma japonés', '🇯🇵', '日 (Japón) + 语 (idioma).'],
-            ['paises', '德国人', 'Déguórén', 'Alemán / Alemana (persona)', '🇩🇪', '德国 (Alemania) + 人.'],
-            ['paises', '意大利人', 'Yìdàlìrén', 'Italiano / Italiana (persona)', '🇮🇹', '意大利 (Italia) + 人.'],
-            ['paises', '墨西哥', 'Mòxīgē', 'México', '🇲🇽', 'Adaptación fonética de México.'],
-            ['paises', '墨西哥人', 'Mòxīgērén', 'Mexicano / Mexicana', '🇲🇽', 'En México se habla 西班牙语 (español).'],
-            ['paises', '外国', 'wàiguó', 'País extranjero', '🗺️', '外 (exterior) + 国 (país).'],
-            ['paises', '外国人', 'wàiguórén', 'Persona extranjera', '🧳', 'Coloquialmente también 老外 (lǎowài).'],
 
             // 6A. CLASIFICADORES (量词)
             ['clasificadores', '个', 'gè', 'Clasificador general (personas, frutas, unidades)', '📦', 'El comodín más usado del mandarín.'],
@@ -908,9 +845,6 @@
             ['clasificadores', '瓶', 'píng', 'Clasificador de botellas', '🍾', 'Ej: 一瓶水 (una botella de agua).'],
             ['clasificadores', '块', 'kuài', 'Clasificador de trozos, tajadas y moneda (yuan)', '🍰', 'Tajadas de pastel, sandía o dinero hablado.'],
             ['clasificadores', '层', 'céng', 'Clasificador de pisos o niveles de edificios', '🏢', 'También se usa para capas de un pastel.'],
-            ['clasificadores', '家', 'jiā', 'Clasificador de tiendas, empresas y restaurantes', '🏬', 'Ej: 一家店 (una tienda), 两家餐厅 (dos restaurantes).'],
-            ['clasificadores', '罐', 'guàn', 'Clasificador de latas', '🥫', 'Ej: 一罐可乐 (una lata de Coca-Cola).'],
-            ['clasificadores', '份', 'fèn', 'Clasificador de porciones / raciones', '🍱', 'Ej: 一份炒饭 (una porción de arroz frito). También para periódicos.'],
 
             // 6B. ADJETIVOS, CUALIDADES Y EMOCIONES
             ['adjetivos', '好', 'hǎo', 'Bueno / Bien', '👍', 'Mujer (女) + Hijo (子) = bondad y bienestar.'],
@@ -941,7 +875,6 @@
             ['adjetivos', '生气', 'shēngqì', 'Enojado / Enfadarse', '😡', 'Literalmente: "Generar aire/vapor".'],
             ['adjetivos', '饿', 'è', 'Hambriento', '🤤', 'Radical de comida (饣) + yo (我).'],
             ['adjetivos', '我饿了', 'wǒ è le', 'Tengo hambre (ya me dio hambre)', '🍽️', 'La partícula 了 (le) indica cambio de estado.'],
-            ['adjetivos', '凉', 'liáng', 'Frío / Fresco (comida o bebida)', '🥗', 'A diferencia de 冷 (clima), describe comida fría: 菜凉了 (la comida se enfrió).'],
 
             // 6C. COLORES (色彩)
             ['colores', '红色', 'hóngsè', 'Rojo', '🔴', 'Color de la buena fortuna y alegría en China.'],
@@ -952,7 +885,6 @@
             ['colores', '黑色', 'hēisè', 'Negro', '⚫', 'Color de elegancia y profundidad.'],
             ['colores', '橙色', 'chéngsè', 'Naranja (color)', '🟠', 'Toma su nombre de la fruta naranja (橙).'],
             ['colores', '紫色', 'zǐsè', 'Morado / Púrpura', '🟣', 'Asociado con la nobleza y la estrella polar.'],
-            ['colores', '颜色', 'yánsè', 'Color (en general)', '🎨', '¿什么颜色？ = ¿De qué color?'],
 
             // 7A. ZODIACO CHINO Y OTROS ANIMALES
             ['animales', '老鼠', 'lǎoshǔ (鼠 shǔ)', 'Ratón / Rata (Zodiaco #1)', '🐭', 'Primer animal del ciclo del zodiaco chino.'],
@@ -972,7 +904,6 @@
             ['animales', '熊猫', 'xióngmāo', 'Oso panda', '🐼', 'Literalmente: "Oso (熊) + Gato (猫)". Tesoro nacional de China.'],
             ['animales', '鱼', 'yú', 'Pez / Pescado', '🐟', 'Suena igual que 余 (abundancia). Se cuenta con 条.'],
             ['animales', '蜘蛛', 'zhīzhū', 'Araña', '🕷️', 'Ambos caracteres llevan el radical de insecto (虫).'],
-            ['animales', '鸭子', 'yāzi (鸭 yā)', 'Pato', '🦆', 'Lleva el radical de ave (鸟) a la derecha.'],
 
             // 7B. PLATOS Y COMIDAS
             ['comidas', '米饭', 'mǐfàn', 'Arroz cocido (blanco)', '🍚', 'Alimento base cotidiano.'],
@@ -993,17 +924,6 @@
             ['comidas', '午饭', 'wǔfàn', 'Almuerzo', '🍱', 'Comida del mediodía (午).'],
             ['comidas', '晚饭', 'wǎnfàn', 'Cena', '🍛', 'Comida de la noche (晚).'],
             ['comidas', '糖', 'táng', 'Azúcar / Dulce / Caramelo', '🍬', 'Sirve tanto para el ingrediente como para una golosina.'],
-            ['comidas', '肉', 'ròu', 'Carne', '🥩', 'Se combina: animal + 肉. Solo 肉 suele entenderse como cerdo.'],
-            ['comidas', '牛肉', 'niúròu', 'Carne de res / vaca', '🥩', '牛 (vaca) + 肉 (carne).'],
-            ['comidas', '猪肉', 'zhūròu', 'Carne de cerdo', '🥓', '猪 (cerdo) + 肉 (carne). La carne más consumida en China.'],
-            ['comidas', '羊肉', 'yángròu', 'Carne de cordero / cabra', '🍖', '羊 (cabra/oveja) + 肉 (carne).'],
-            ['comidas', '鱼肉', 'yúròu', 'Carne de pescado', '🐟', '鱼 (pescado) + 肉 (carne). En el día a día se dice solo 鱼.'],
-            ['comidas', '火锅', 'huǒguō', 'Olla caliente (hot pot)', '🍲', '火 (fuego) + 锅 (olla). Muy famoso el de Sichuan.'],
-            ['comidas', '烤鸭', 'kǎoyā', 'Pato asado / laqueado', '🦆', '烤 (asar) + 鸭 (pato). Plato emblemático: 北京烤鸭.'],
-            ['comidas', '鸡蛋', 'jīdàn', 'Huevo (de gallina)', '🥚', '鸡 (gallina) + 蛋 (huevo).'],
-            ['comidas', '蛋糕', 'dàngāo', 'Pastel / Torta', '🍰', '蛋 (huevo) + 糕 (pastel). Ver 生日蛋糕.'],
-            ['comidas', '面包', 'miànbāo', 'Pan', '🍞', '面 (harina) + 包 (envolver/bollo).'],
-            ['comidas', '巧克力', 'qiǎokèlì', 'Chocolate', '🍫', 'Adaptación fonética de "chocolate".'],
 
             // 7C. BEBIDAS
             ['bebidas', '水', 'shuǐ', 'Agua', '💧', 'Pictograma de una corriente de agua fluyendo.'],
@@ -1019,8 +939,6 @@
             ['bebidas', '红酒', 'hóngjiǔ', 'Vino tinto', '🍷', 'Literalmente: "Vino (酒) rojo (红)".'],
             ['bebidas', '羊奶', 'yángnǎi', 'Leche de cabra / oveja', '🥛', '羊 (cabra) + 奶 (leche).'],
             ['bebidas', '牛奶', 'niúnǎi', 'Leche de vaca', '🥛', '牛 (vaca) + 奶 (leche).'],
-            ['bebidas', '酒', 'jiǔ', 'Trago / Licor / Bebida alcohólica', '🥃', 'Agua (氵) + vasija de fermentar (酉).'],
-            ['bebidas', '珍珠奶茶', 'zhēnzhū nǎichá', 'Boba tea / Té de burbujas', '🧋', 'Literalmente: "Té con leche (奶茶) de perlas (珍珠)".'],
 
             // 7D. VERDURAS Y HORTALIZAS (蔬菜)
             ['verduras', '蔬菜', 'shūcài', 'Verduras / Vegetales', '🥬', 'Término general para las hortalizas.'],
@@ -1050,9 +968,6 @@
             ['frutas', '菠萝', 'bōluó', 'Piña / Ananá', '🍍', 'Fruta tropical muy apreciada en Asia.'],
             ['frutas', '橘子', 'júzi', 'Mandarina', '🍊', 'Cítrico dulce fácil de pelar.'],
             ['frutas', '橙子', 'chéngzi', 'Naranja (fruta)', '🍊', 'Fruta cítrica de la cual toma nombre el color 橙色.'],
-            ['frutas', '牛油果', 'niúyóuguǒ', 'Aguacate', '🥑', 'Literalmente: "Fruta de mantequilla". También 鳄梨 (èlí).'],
-            ['frutas', '猕猴桃', 'míhóutáo (奇异果 qíyìguǒ)', 'Kiwi', '🥝', 'Literalmente: "Durazno del macaco".'],
-            ['frutas', '樱桃', 'yīngtáo', 'Cereza', '🍒', 'Ambos caracteres llevan el radical de árbol (木).'],
 
             // 7F. UTENSILIOS DE MESA Y OBJETOS DEL HOGAR
             ['objetos', '筷子', 'kuàizi', 'Palillos chinos', '🥢', 'Lleva el radical de bambú (⺮) en la parte superior.'],
@@ -1063,29 +978,7 @@
             ['objetos', '车', 'chē', 'Auto / Vehículo / Carro', '🚗', 'Representa un carruaje visto desde arriba.'],
             ['objetos', '书', 'shū', 'Libro', '📕', 'Se cuenta con el clasificador 本 (běn).'],
             ['objetos', '床', 'chuáng', 'Cama', '🛏️', 'Incluye el radical de madera (木) por su estructura.'],
-            ['objetos', '毛衣', 'máoyī', 'Suéter / Jersey de lana', '🧥', 'Literalmente: "Lana/pelo (毛) + Ropa (衣)".'],
-            ['objetos', '雨伞', 'yǔsǎn', 'Paraguas', '☂️', '雨 (lluvia) + 伞 (sombrilla). Se cuenta con 把.'],
-            ['objetos', '手机', 'shǒujī', 'Celular / Teléfono móvil', '📱', '手 (mano) + 机 (máquina). Se cuenta con 部 o 个.'],
-            ['objetos', '苹果手机', 'píngguǒ shǒujī', 'iPhone', '📱', 'Literalmente: "Celular (手机) manzana (苹果)".'],
-            ['objetos', '耳机', 'ěrjī', 'Audífonos', '🎧', '耳 (oreja) + 机 (máquina).'],
-            ['objetos', '衣服', 'yīfu', 'Ropa', '👕', 'Se cuenta con el clasificador 件 (jiàn).'],
-            ['objetos', '报纸', 'bàozhǐ', 'Periódico', '📰', '报 (reporte) + 纸 (papel). Se cuenta con 份 (fèn).'],
-            ['objetos', '圆珠笔', 'yuánzhūbǐ (笔 bǐ)', 'Esfero / Bolígrafo', '🖊️', 'Literalmente: "Pluma (笔) de bolita redonda". Se cuenta con 支 (zhī).'],
-
-            // 8. TRANSPORTE (交通)
-            ['transporte', '地铁', 'dìtiě', 'Metro', '🚇', 'Literalmente: "Hierro (铁) bajo tierra (地)".'],
-            ['transporte', '站', 'zhàn', 'Estación / Parada', '🚏', 'También significa "estar de pie".'],
-            ['transporte', '地铁站', 'dìtiězhàn', 'Estación de metro', '🚉', '地铁 (metro) + 站 (estación).'],
-            ['transporte', '火车', 'huǒchē', 'Tren', '🚆', 'Literalmente: "Carro de fuego", por las locomotoras de vapor.'],
-            ['transporte', '高铁', 'gāotiě', 'Tren de alta velocidad', '🚄', 'Abreviatura de 高速铁路 (ferrocarril de alta velocidad).'],
-            ['transporte', '公交车', 'gōngjiāochē (公共汽车 gōnggòng qìchē)', 'Autobús / Bus', '🚌', '公交车 es lo más común al hablar; 公共汽车 es la forma larga.'],
-            ['transporte', '出租车', 'chūzūchē', 'Taxi', '🚕', 'Literalmente: "Carro de alquiler". Tomar un taxi = 打车 (dǎchē).'],
-            ['transporte', '飞机', 'fēijī', 'Avión', '✈️', '飞 (volar) + 机 (máquina).'],
-            ['transporte', '船', 'chuán', 'Barco', '🚢', 'Lleva el radical de barca (舟) a la izquierda.'],
-            ['transporte', '摩托车', 'mótuōchē', 'Moto / Motocicleta', '🏍️', 'Adaptación fonética de "motor" + 车.'],
-            ['transporte', '自行车', 'zìxíngchē', 'Bicicleta', '🚲', 'Literalmente: "Carro que anda por sí mismo".'],
-            ['transporte', '坐', 'zuò', 'Ir en / Tomar (transporte donde vas sentado)', '🪑', 'Ej: 坐飞机 (ir en avión), 坐地铁 (tomar el metro).'],
-            ['transporte', '骑', 'qí', 'Montar (bici, moto, caballo)', '🚴', 'Para lo que se monta a horcajadas: 骑自行车, 骑马.']
+            ['objetos', '毛衣', 'máoyī', 'Suéter / Jersey de lana', '🧥', 'Literalmente: "Lana/pelo (毛) + Ropa (衣)".']
         ];
 
         // Transformar arreglo compacto en objetos enriquecidos
